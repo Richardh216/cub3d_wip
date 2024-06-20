@@ -6,7 +6,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 OBJ_DIR = obj/
 SRC_DIR = src/
 
-SRC := main.c error.c parse.c \
+SRC := main.c error.c parse.c parse_utils.c get_next_line.c get_next_line_utils.c \
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 OBJ = $(SRC:.c=.o)

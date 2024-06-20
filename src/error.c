@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 13:28:10 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/18 14:20:16 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/19 12:22:50 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,7 @@ int	ft_error(char *str, int flag)
 		ft_putstr_fd(str, 2);
 	}
 	ft_putchar_fd('\n', 2);
-	exit(flag);
+	if (flag)
+		exit(flag);
+	return (1);
 }
