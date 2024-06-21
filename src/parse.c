@@ -6,13 +6,13 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:12:39 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/20 14:18:20 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:46:45 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-static void	ft_heading_2(t_data *data, char *str, int j)
+void	ft_heading_2(t_data *data, char *str, int j)
 {
 	int		i;
 
@@ -121,4 +121,7 @@ void	ft_parse(t_data *data, char **argv)
 	temp = ft_strdup(tmp);
 	i = ft_heading(data, temp);
 	ft_heading_2(data, tmp, i);
+	i = -1;
+	while (++i < 3)
+		printf("ceiling: %d\nfloor: %d\n", data->top[i], data->bottom[i]);
 }

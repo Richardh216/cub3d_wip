@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/20 14:21:42 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:48:35 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ char	*ft_open(int fd);
 int		ft_heading(t_data *data, char *str);
 void	ft_config(t_data *data, char *str);
 void	ft_get_color(t_data *data, char *str);
-// void	ft_heading_2(t_data *data, char *str, int j);
+void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str);
+char	*ft_extract_color(char *str, int i);
+void	ft_heading_2(t_data *data, char *str, int j);
+void	ft_get_path(t_data *data, char *str);
 
 //utils
 int		skip_leading_spaces(char *str, int pos);

@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/20 16:57:12 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:47:54 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,54 +24,72 @@ int	skip_leading_spaces(char *str, int pos)
 	return (pos);
 }
 
-// char *ft_extract_path(char *str, int i)
-// {
-// 	char	*tmp;
+char	*ft_extract_color(char *str, int i)
+{
+	int		j;
+	char	*new;
 
-// 	tmp = NULL;
-// 	while (str[i] && str[i] != '\n')
-// 	{
-// 		tmp[j]
-// 	}
-// }
+	new = ft_strdup("");
+	j = 0;
+	while (str[i] && str[i] != '\n')
+	{
+		i = skip_leading_spaces(str, i);
+		if (str[i] != ' ')
+			new[j++] = str[i];
+		i++;
+	}
+	new[j] = '\0';
+	return (new);
+}
 
-// void	ft_get_path(t_data *data, char *str)
-// {
-// 	int	i;
+void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
+{
+	char	**b;
+	char	**t;
+	int		i;
 
-// 	i = -1;
-// 	while (str[++i])
-// 	{
-// 		i = skip_leading_spaces(str, i);
-// 		if (!ft_strncmp(str, "NO", 2))
-// 			ft_extract_path(str + 2, i);
-// 	}
-// 	(void)data;
-// }
+	if (bottom)
+		b = ft_split(str + 1, ',');
+	if (top)
+		t = ft_split(str + 1, ',');
+	if (bottom)
+		free(bottom);
+	if (top)
+		free(top);
+	i = -1;
+	if (!ft_strncmp(str, "C", 1))
+		while (t[++i])
+			data->top[i] = ft_atoi(t[i]);
+	i = -1;
+	if (!ft_strncmp(str, "F", 1))
+		while (b[++i])
+			data->bottom[i] = ft_atoi(b[i]);
+}
 
 void	ft_get_color(t_data *data, char *str)
 {
 	int		i;
-	char	**top;
-	char	**bottom;
+	char	*top;
+	char	*bottom;
 
+	top = NULL;
+	bottom = NULL;
 	i = -1;
 	while (str[++i])
 	{
 		i = skip_leading_spaces(str, i);
 		if (!ft_strncmp(str, "C", 1))
-			top = ft_split(str + 2, ',');
+		{
+			top = ft_extract_color(str, i);
+			break ;
+		}
 		else if (!ft_strncmp(str, "F", 1))
-			bottom = ft_split(str + 2, ',');
+		{
+			bottom = ft_extract_color(str, i);
+			break ;
+		}
 	}
-	i = -1;
-	if (!ft_strncmp(str, "C", 1))
-		while (top[++i])
-			data->top[i] = ft_atoi(top[i]);
-	i = -1;
-	if (!ft_strncmp(str, "F", 1))
-		while (bottom[++i])
-			data->bottom[i] = ft_atoi(bottom[i]);
+	ft_get_color_2(top, bottom, data, str);
 }
 
 void	ft_config(t_data *data, char *str)
@@ -96,6 +114,6 @@ void	ft_config(t_data *data, char *str)
 	if (flag)
 		ft_get_color(data, str);
 	else
-		printf("PAth");
-		// ft_get_path(data, str);
+		ft_get_path(data, str);
+		// printf("PAth\n");
 }
