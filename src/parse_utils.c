@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/21 15:47:54 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:33:09 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ char	*ft_extract_color(char *str, int i)
 	return (new);
 }
 
+void	ft_val_check(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (data->bottom[++i])
+		if (data->bottom[i] < 0 || data->bottom[i] > 255)
+			ft_error("Incorrect RGB values!", 1);
+	i = -1;
+	while (data->top[++i])
+		if (data->top[i] < 0 || data->top[i] > 255)
+			ft_error("Incorrect RGB values!", 1);
+}
+
 void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
 {
 	char	**b;
@@ -66,6 +80,37 @@ void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
 			data->bottom[i] = ft_atoi(b[i]);
 }
 
+void	ft_check_color(char *str)
+{
+	int	i;
+	int	count;
+	int	flag;
+
+	i = 0;
+	count = 0;
+	flag = 0;
+	if ((str[0] == 'C' || str[0] == 'F') && (str[1] != ' ' && str[1] != '\t'))
+		ft_error("NO SPACE", 1);
+	while (str[++i])
+	{
+		if (!ft_isdigit(str[i]) && str[i] != ' '
+			&& str[i] != '\t' && str[i] != ',')
+			ft_error("No characters allowed!", 1);
+		if (ft_isdigit(str[i]))
+		{
+			count += 1;
+			flag = 0;
+			while (str[i] && ft_isdigit(str[i]))
+				i++;
+			i--;
+		}
+		if (str[i] == ',')
+			flag = 1;
+	}
+	if (flag || count != 3)
+		ft_error("Incorrect color input!", 1);
+}
+
 void	ft_get_color(t_data *data, char *str)
 {
 	int		i;
@@ -75,6 +120,7 @@ void	ft_get_color(t_data *data, char *str)
 	top = NULL;
 	bottom = NULL;
 	i = -1;
+	ft_check_color(str);
 	while (str[++i])
 	{
 		i = skip_leading_spaces(str, i);
@@ -100,7 +146,7 @@ void	ft_config(t_data *data, char *str)
 	int	flag;
 
 	j = 0;
-	flag = (!ft_strncmp(str, "C ", 2) || !ft_strncmp(str, "F ", 2));
+	flag = (!ft_strncmp(str, "C", 1) || !ft_strncmp(str, "F", 1));
 	if (flag)
 	{
 		k = j;
@@ -111,9 +157,8 @@ void	ft_config(t_data *data, char *str)
 		if (count != 2)
 			ft_error("Invalid RGB format!", 1);
 	}
-	if (flag)
+	if (flag && count == 2)
 		ft_get_color(data, str);
 	else
 		ft_get_path(data, str);
-		// printf("PAth\n");
 }

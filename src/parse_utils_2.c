@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 13:41:06 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/21 16:46:03 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:11:43 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	ft_get_path(t_data *data, char *str)
 	}
 	printf("THIS PATH: %s\n", path);
 	// tex = mlx_load_png(path);
-	free(path);
+	// if (path)
+	// 	free(path);
 	(void)data;
 }
