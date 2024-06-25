@@ -1,7 +1,7 @@
-NO	./textures/wall1.png	8498w5v	 5 
-SO	 	./textures/wall2.png  	-fd
-WE ./textures/wall3.png   	_e
-EA ./textures/wall4.png      .png  g   g
+NO           			./textures/wall1.png
+SO              		./textures/wall2.png 
+WE	      		    ./textures/wall3.png                                        		           
+EA  	              ./textures/wall4.png                     
  
 F	2	,20, 	      100           
 C	225      ,        30,       0 

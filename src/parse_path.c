@@ -6,90 +6,69 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 13:41:06 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 12:38:30 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/25 18:52:16 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-int	ft_png_len(char *str)
+static char	*rspaces(char *str)
 {
-	int	i;
+	char	*new;
+	int		i;
+	int		j;
 
-	i = -1;
-	while (str[++i])
-		if (!ft_strncmp(str + i, ".png", 4))
-			return (i + 2);
-	return (i);
+	i = 0;
+	j = 0;
+	while (str[i] && (str[i] == '\t' || str[i] == ' '))
+		i++;
+	while (str[j])
+		j++;
+	j--;
+	while (str[j] && (str[j] == ' ' || str[j] == '\t'))
+		j--;
+	new = ft_substr(str, i, j - i + 1);
+	free(str);
+	return (new);
 }
 
-char	*ft_extract_path(char *str, int i)
+char	*ft_extract_path(char *str)
 {
-	int		j;
-	char	*tmp;
 	char	*new;
+	int		i;
 
-	if ((!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2)
-			|| !ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
-		&& (str[2] != ' ' && str[2] != '\t'))
-		ft_error("NO PATH SPACE!", 1);
-	tmp = ft_strdup("");
-	j = 0;
-	while (str[i] && str[i] != '\n')
-	{
-		i = skip_leading_spaces(str, i);
-		tmp[j++] = str[i++];
-	}
-	tmp[j] = '\0';
-	new = ft_substr(tmp, 2, ft_png_len(tmp));
-	free(tmp);
+	if (ft_strlen(str) <= 3)
+		ft_error("NO SPACE", 1);
+	if (str[2] != ' ' && str[2] != '\t')
+		ft_error("NO SPACE", 1);
+	i = 2;
+	i = skip_leading_spaces(str, i);
+	new = ft_substr(str, i, ft_strlen(str));
+	new = rspaces(new);
 	return (new);
 }
 
 void	ft_get_path(t_data *data, char *str)
 {
-	int				i;
-	mlx_texture_t	*tex;
 	char			*path;
+	mlx_texture_t	*tex;
 
-	i = -1;
-	path = NULL;
-	while (str[++i])
-	{
-		if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2)
-			|| !ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
-		{
-			path = ft_extract_path(str, i);
-			break ;
-		}
-	}
-	printf("THIS PATH: %s\n", path);
+	path = ft_extract_path(str);
+	printf("PATH: %sEND\n", path);
+	if (!path)
+		path_error(data, "Malloc failed");
 	tex = mlx_load_png(path);
-	// if (path)
-	// 	free(path);
-	// if (!tex)
-	// 	ft_error("Mlx_load_png failure", 1);
-	// if (!ft_strncmp(str, "EA", 2) && !data->tex[0])
-	// {
-	// 	data->tex[0] = tex;
-	// 	printf("EAST RISE\n");
-	// }
-	// else if (!ft_strncmp(str, "WE", 2) && !data->tex[1])
-	// {
-	// 	data->tex[1] = tex;
-	// 	printf("WEST RISE\n");
-	// }
-	// else if (!ft_strncmp(str, "NO", 2) && !data->tex[2])
-	// {
-	// 	data->tex[2] = tex;
-	// 	printf("NORTH RISE\n");
-	// }
-	// else if (!ft_strncmp(str, "SO", 2) && !data->tex[3])
-	// {
-	// 	data->tex[3] = tex;
-	// 	printf("SOUTH RISE\n");
-	// }
-	// else
-	// 	ft_error("Issa problem innit?", 1);
-	(void)data;
+	free(path);
+	if (!tex)
+		path_error(data, "Mlx_load_png failed!");
+	if (!ft_strncmp(str, "EA", 2) && !data->tex[0])
+		data->tex[0] = tex;
+	else if (!ft_strncmp(str, "WE", 2) && !data->tex[1])
+		data->tex[1] = tex;
+	else if (!ft_strncmp(str, "NO", 2) && !data->tex[2])
+		data->tex[2] = tex;
+	else if (!ft_strncmp(str, "SO", 2) && !data->tex[3])
+		data->tex[3] = tex;
+	else
+		path_error(data, "Issa problem innit?");
 }

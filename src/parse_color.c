@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 11:07:56 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/25 16:53:49 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,16 +112,16 @@ void	ft_get_color(t_data *data, char *str)
 
 void	ft_config(t_data *data, char *str)
 {
-	int	j;
+	int	i;
 	int	k;
 	int	count;
 	int	flag;
 
-	j = 0;
+	i = 0;
 	flag = (!ft_strncmp(str, "C", 1) || !ft_strncmp(str, "F", 1));
 	if (flag)
 	{
-		k = j;
+		k = i;
 		count = 0;
 		while (str[k])
 			if (str[k++] == ',')
