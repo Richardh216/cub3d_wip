@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 11:06:31 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 11:22:46 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:21:56 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,19 @@ void	ft_val_check(t_data *data)
 	i = -1;
 	while (data->bottom[++i])
 		if (data->bottom[i] < 0 || data->bottom[i] > 255)
-			ft_error("Incorrect RGB values!", 1);
+			ft_error("Incorrect RGB values!", 1, NULL);
 	i = -1;
 	while (data->top[++i])
 		if (data->top[i] < 0 || data->top[i] > 255)
-			ft_error("Incorrect RGB values!", 1);
+			ft_error("Incorrect RGB values!", 1, NULL);
+	data->c_rgb = (data->top[0] << 16) | (data->top[1] << 8) | data->top[2];
+	data->f_rgb = (data->bottom[0] << 16)
+		| (data->bottom[1] << 8) | data->bottom[2];
 }
 
 void	check_help(char *str, int i)
 {
 	if (!ft_isdigit(str[i]) && str[i] != ' '
 		&& str[i] != '\t' && str[i] != ',')
-		ft_error("No characters allowed!", 1);
+		ft_error("No characters allowed!", 1, str);
 }

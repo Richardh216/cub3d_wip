@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 16:53:49 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:25:25 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ void	ft_check_color(char *str)
 	i = 0;
 	count = 0;
 	flag = 0;
-	if ((str[0] == 'C' || str[0] == 'F') && (str[1] != ' ' && str[1] != '\t'))
-		ft_error("NO SPACE", 1);
+	if (str[0] && (str[0] == 'C' || str[0] == 'F')
+		&& (str[1] != ' ' && str[1] != '\t'))
+		ft_error("NO SPACE", 1, str);
 	while (str[++i])
 	{
 		check_help(str, i);
@@ -80,7 +81,7 @@ void	ft_check_color(char *str)
 			flag = 1;
 	}
 	if (flag || count != 3)
-		ft_error("Incorrect color input!", 1);
+		ft_error("Incorrect color input!", 1, str);
 }
 
 void	ft_get_color(t_data *data, char *str)
@@ -127,7 +128,7 @@ void	ft_config(t_data *data, char *str)
 			if (str[k++] == ',')
 				count++;
 		if (count != 2)
-			ft_error("Invalid RGB format!", 1);
+			ft_error("Invalid RGB format!", 1, str);
 	}
 	if (flag && count == 2)
 		ft_get_color(data, str);

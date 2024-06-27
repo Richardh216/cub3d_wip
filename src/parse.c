@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:12:39 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 18:51:18 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:21:22 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ void	ft_heading_2(t_data *data, char *str, int j)
 			j = i;
 		i++;
 	}
-	(void)data;
-	// call get_map
-	// printf("STR: %s\nCOUNT: %d\n", str + j, j);
+	ft_get_map(data, str, j);
 }
 
 int	ft_heading(t_data *data, char *str)
@@ -48,7 +46,7 @@ int	ft_heading(t_data *data, char *str)
 			str[i] = '\0';
 		}
 		else if (str[i] != ' ' && str[i] != '\n')
-			ft_error("Invalid configuration!", 1);
+			ft_error("Invalid configuration!", 1, str);
 		i++;
 	}
 	while (j > 0)
@@ -65,6 +63,11 @@ static void	init_data(t_data *data)
 	data->mlx = NULL;
 	data->img = NULL;
 	data->map = NULL;
+	data->pos = malloc(sizeof(t_pos));
+	if (!data->pos)
+		ft_error("Malloc error!", 1, NULL);
+	data->pos->x = -1;
+	data->pos->y = -1;
 	while (++i < 4)
 		data->tex[i] = NULL;
 	i = -1;
@@ -85,7 +88,7 @@ char	*ft_open(int fd)
 	if (!line)
 	{
 		close(fd);
-		ft_error("Malloc error!", 1);
+		ft_error("Malloc error!", 1, NULL);
 	}
 	while (1)
 	{
@@ -110,18 +113,24 @@ void	ft_parse(t_data *data, char **argv)
 
 	i = ft_strlen(argv[1]);
 	if (i < 4)
-		ft_error("Incorrect file name!", 1);
+		ft_error("Incorrect file name!", 1, NULL);
 	if (ft_strncmp(&argv[1][i - 4], ".cub", 4))
-		ft_error("Incorrect file format!", 1);
+		ft_error("Incorrect file format!", 1, NULL);
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
-		ft_error("Could not open file!", 1);
+		ft_error("Could not open file!", 1, NULL);
 	tmp = ft_open(fd);
 	init_data(data);
 	temp = ft_strdup(tmp);
 	i = ft_heading(data, temp);
-	ft_heading_2(data, tmp, i);
 	ft_val_check(data);
+	printf("F_RGB %d\n", data->f_rgb);
+	printf("C_RGB %d\n", data->c_rgb);
+	ft_heading_2(data, tmp, i);
+	printf("Y: %d, X: %d\n", data->pos->y, data->pos->x);
+	i = -1;
+	while (data->map[++i])
+		printf("%s\n", data->map[i]);
 	// i = -1;
 	// while (++i < 3)
 	// 	printf("ceiling: %d\nfloor: %d\n", data->top[i], data->bottom[i]);

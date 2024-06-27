@@ -6,13 +6,13 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 13:28:10 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 16:24:46 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:27:00 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-int	ft_error(char *str, int flag)
+int	ft_error(char *str, int flag, char *file)
 {
 	ft_putstr_fd("cub3d: Error", 2);
 	if (str)
@@ -21,12 +21,14 @@ int	ft_error(char *str, int flag)
 		ft_putstr_fd(str, 2);
 	}
 	ft_putchar_fd('\n', 2);
+	if (file)
+		free(file);
 	if (flag)
 		exit(flag);
 	return (1);
 }
 
-void	path_error(t_data *data, char *str)
+void	path_error(t_data *data, char *str, char *file)
 {
 	int	i;
 
@@ -44,5 +46,24 @@ void	path_error(t_data *data, char *str)
 			;
 	}
 	if (str)
-		ft_error(str, 1);
+		ft_error(str, 1, file);
+	if (file)
+		free(file);
+}
+
+void	free_mat(char **mat)
+{
+	int	i;
+
+	i = 0;
+	if (!mat)
+		return ;
+	while (mat && mat[i])
+	{
+		if (mat[i])
+			free(mat[i]);
+		i++;
+	}
+	if (mat)
+		free(mat);
 }

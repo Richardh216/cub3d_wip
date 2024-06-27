@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/25 16:53:58 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:19:31 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ typedef struct f_list
 	struct f_list	*next;
 }			t_lista;
 
+typedef struct s_pos
+{
+	int	x;
+	int	y;
+}		t_pos;
+
 typedef struct s_data
 {
 	mlx_t			*mlx;
@@ -38,7 +44,10 @@ typedef struct s_data
 	mlx_texture_t	*tex[4];
 	int				top[3];
 	int				bottom[3];
+	int				c_rgb;
+	int				f_rgb;
 	char			**map;
+	t_pos			*pos;
 }	t_data;
 
 //parse
@@ -51,16 +60,17 @@ void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str);
 char	*ft_extract_color(char *str, int i);
 void	ft_heading_2(t_data *data, char *str, int j);
 void	ft_get_path(t_data *data, char *str);
-// void	ft_get_path(t_data *data, char *name, char *str);
 void	ft_val_check(t_data *data);
 void	check_help(char *str, int i);
+void	ft_get_map(t_data *data, char *str, int j);
 
 //utils
 int		skip_leading_spaces(char *str, int pos);
 
 //Errors
-int		ft_error(char *str, int flag);
-void	path_error(t_data *data, char *str);
+int		ft_error(char *str, int flag, char *file);
+void	path_error(t_data *data, char *str, char *file);
+void	free_mat(char **mat);
 
 //get_next_line
 char	*get_next_line(int fd);
