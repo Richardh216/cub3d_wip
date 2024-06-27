@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:19:31 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:33:44 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@
 #  define BUFFER_SIZE 10
 # endif
 
+# define SPEED 0.1
+# define MAP_X 10
+# define MAP_Y 10
+# define WIDTH 1920
+# define HEIGHT 1080
+# define FOV 60
+
 typedef struct f_list
 {
 	char			*str_buf;
@@ -37,6 +44,19 @@ typedef struct s_pos
 	int	y;
 }		t_pos;
 
+typedef struct s_ray 
+{
+	double	x;
+	double	y;
+}	t_ray;
+
+typedef struct s_player
+{
+	double	x;
+	double	y;
+	double	dir;
+}	t_player;
+
 typedef struct s_data
 {
 	mlx_t			*mlx;
@@ -48,6 +68,7 @@ typedef struct s_data
 	int				f_rgb;
 	char			**map;
 	t_pos			*pos;
+	t_player		*player;
 }	t_data;
 
 //parse
@@ -83,5 +104,12 @@ void	copy_str(t_lista *list, char *str);
 int		len_till_newline(t_lista *list);
 t_lista	*find_last_node(t_lista *list);
 int		found_newline(t_lista *list);
+
+//render
+void	render(t_data *data);
+void	keyboard(void *param);
+void	render(t_data *data);
+double	rad(double degrees);
+int		is_wall(int x, int y, int map[MAP_Y][MAP_X]);
 
 #endif

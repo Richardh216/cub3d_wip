@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:12:39 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:21:22 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:41:52 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ int	ft_heading(t_data *data, char *str)
 
 static void	init_data(t_data *data)
 {
-	int	i;
+	int				i;
 
 	i = -1;
-	data->mlx = NULL;
-	data->img = NULL;
+	data->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", false);
+	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	data->map = NULL;
 	data->pos = malloc(sizeof(t_pos));
 	if (!data->pos)
