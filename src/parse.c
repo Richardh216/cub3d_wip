@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:12:39 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:41:52 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:43:12 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_heading(t_data *data, char *str)
 			str[i] = '\0';
 		}
 		else if (str[i] != ' ' && str[i] != '\n')
-			ft_error("Invalid configuration!", 1, str);
+			ft_error("Invalid configuration!", 1, NULL);
 		i++;
 	}
 	while (j > 0)
@@ -57,7 +57,7 @@ int	ft_heading(t_data *data, char *str)
 
 static void	init_data(t_data *data)
 {
-	int				i;
+	int	i;
 
 	i = -1;
 	data->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", false);
@@ -128,10 +128,4 @@ void	ft_parse(t_data *data, char **argv)
 	printf("C_RGB %d\n", data->c_rgb);
 	ft_heading_2(data, tmp, i);
 	printf("Y: %d, X: %d\n", data->pos->y, data->pos->x);
-	i = -1;
-	while (data->map[++i])
-		printf("%s\n", data->map[i]);
-	// i = -1;
-	// while (++i < 3)
-	// 	printf("ceiling: %d\nfloor: %d\n", data->top[i], data->bottom[i]);
 }

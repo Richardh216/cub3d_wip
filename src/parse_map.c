@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 20:13:24 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:25:57 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:18:56 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,20 @@
 
 int	ft_flood_map(t_data *data, char **map, t_pos pos, int flag)
 {
-	// dprintf(2, "HERE 1\n");
 	if (flag && (pos.y < 0 || pos.x < 0 || !map[pos.x] || pos.y
 			>= (int)ft_strlen(map[pos.x]) || !map[pos.x][pos.y]))
-		path_error(data, "Map not closed properly!", NULL); //free
-	// dprintf(2, "HERE 2\n");
+		path_error(data, "Map not closed properly!", NULL);
 	if (pos.y < 0 || pos.x < 0 || !map[pos.x] || pos.y
-			>= (int)ft_strlen(map[pos.x]) || !map[pos.x][pos.y])
+		>= (int)ft_strlen(map[pos.x]) || !map[pos.x][pos.y])
 		return (0);
-	// dprintf(2, "HERE 3\n");
 	if (map[pos.x][pos.y] == '1' || map[pos.x][pos.y] == 'F')
 		return (0);
-	// dprintf(2, "HERE 4\n");
 	if (map[pos.x][pos.y] == ' ')
-		path_error(data, "Map not closed properly!", NULL); //free
-	// dprintf(2, "HERE 5\n");
+		path_error(data, "Map not closed properly!", NULL);
 	if (map[pos.x][pos.y] == '0' || map[pos.x][pos.y] == 'N'
 		|| map[pos.x][pos.y] == 'E' || map[pos.x][pos.y] == 'S'
 			|| map[pos.x][pos.y] == 'W')
 	{
-		// dprintf(2, "HERE 6\n");
 		map[pos.x][pos.y] = 'F';
 		ft_flood_map(data, map, (t_pos){pos.x - 1, pos.y}, 1);
 		ft_flood_map(data, map, (t_pos){pos.x, pos.y + 1}, 1);
@@ -50,8 +44,6 @@ void	ft_map_cpy(t_data *data)
 	t_pos	pos;
 
 	pos = *data->pos;
-	// printf("y: %d, x: %d\n", pos.y, pos.x);
-	// printf("data y: %d, x: %d\n", data->pos->y, data->pos->x);
 	i = 0;
 	while (data->map[i])
 		i++;
@@ -67,9 +59,6 @@ void	ft_map_cpy(t_data *data)
 		i++;
 	}
 	cpy_map[i] = NULL;
-	// i = -1;
-	// while (cpy_map[++i])
-	// 	printf("%s\n", cpy_map[i]);
 	printf("POS: %c\n", cpy_map[pos.x][pos.y]);
 	ft_flood_map(data, cpy_map, (t_pos){pos.x, pos.y}, 0);
 	free_mat(cpy_map);
@@ -97,9 +86,7 @@ void	ft_check_map(t_data *data, char *str, int ind)
 				data->pos->x = i;
 			}
 		}
-			// printf("%s\n", data->map[i]);
 	}
-	// printf("BEF Y: %d, X: %d\n", data->pos->y, data->pos->x);
 	if (data->pos->x == -1 || data->pos->y == -1)
 		path_error(data, "No starting position found!", NULL);
 	ft_map_cpy(data);
@@ -150,5 +137,4 @@ void	ft_get_map(t_data *data, char *str, int j)
 		j++;
 	}
 	ft_check_map(data, str, ind);
-	// printf("STR: %s\n", str + ind);
 }

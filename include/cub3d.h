@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:33:44 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:46:18 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 #  define BUFFER_SIZE 10
 # endif
 
-# define SPEED 0.1
-# define MAP_X 10
-# define MAP_Y 10
+# define SPEED 0.05
+# define MAP_X 20
+# define MAP_Y 20
 # define WIDTH 1920
 # define HEIGHT 1080
 # define FOV 60
@@ -44,11 +44,11 @@ typedef struct s_pos
 	int	y;
 }		t_pos;
 
-typedef struct s_ray 
+typedef struct s_vec
 {
 	double	x;
 	double	y;
-}	t_ray;
+}	t_vec;
 
 typedef struct s_player
 {
@@ -84,8 +84,10 @@ void	ft_get_path(t_data *data, char *str);
 void	ft_val_check(t_data *data);
 void	check_help(char *str, int i);
 void	ft_get_map(t_data *data, char *str, int j);
+void	ft_color_help(char *str);
 
 //utils
+char	*rspaces(char *str);
 int		skip_leading_spaces(char *str, int pos);
 
 //Errors

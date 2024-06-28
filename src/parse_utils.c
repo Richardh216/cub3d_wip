@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 11:06:31 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:21:56 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:35:44 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ void	ft_val_check(t_data *data)
 	int	i;
 
 	i = -1;
-	while (data->bottom[++i])
+	while (data->bottom[++i] && i < 3)
 		if (data->bottom[i] < 0 || data->bottom[i] > 255)
 			ft_error("Incorrect RGB values!", 1, NULL);
 	i = -1;
-	while (data->top[++i])
+	while (data->top[++i] && i < 3)
 		if (data->top[i] < 0 || data->top[i] > 255)
 			ft_error("Incorrect RGB values!", 1, NULL);
 	data->c_rgb = (data->top[0] << 16) | (data->top[1] << 8) | data->top[2];
@@ -45,5 +45,12 @@ void	check_help(char *str, int i)
 {
 	if (!ft_isdigit(str[i]) && str[i] != ' '
 		&& str[i] != '\t' && str[i] != ',')
-		ft_error("No characters allowed!", 1, str);
+		ft_error("No characters allowed!", 1, NULL);
+}
+
+void	ft_color_help(char *str)
+{
+	if (str[0] && (str[0] == 'C' || str[0] == 'F')
+		&& (str[1] != ' ' && str[1] != '\t'))
+		ft_error("Incorrect color input!", 1, NULL);
 }

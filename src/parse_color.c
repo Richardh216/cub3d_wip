@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:25:25 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:44:07 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,19 @@ char	*ft_extract_color(char *str, int i)
 {
 	int		j;
 	char	*new;
+	int		count;
 
-	new = ft_strdup("");
 	j = 0;
+	new = malloc(ft_strlen(str) + 1);
+	count = 0;
 	while (str[i] && str[i] != '\n')
 	{
+		if ((str[i] == 'C' && i != 0) || (str[i] == 'F' && i != 0))	
+				break ;
 		i = skip_leading_spaces(str, i);
-		if (str[i] != ' ')
+		if (str[i] && str[i] != ' ') {
 			new[j++] = str[i];
+		}
 		i++;
 	}
 	new[j] = '\0';
@@ -36,22 +41,26 @@ void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
 	char	**t;
 	int		i;
 
+	b = NULL;
+	t = NULL;
 	if (bottom)
-		b = ft_split(str + 1, ',');
+		b = ft_split(bottom + 1, ',');
 	if (top)
-		t = ft_split(str + 1, ',');
+		t = ft_split(top + 1, ',');
+	i = -1;
+	if (top && !ft_strncmp(top, "C", 1))
+		while (t[++i])
+			data->top[i] = ft_atoi(t[i]);
+	i = -1;
+	if (bottom && !ft_strncmp(bottom, "F", 1))
+		while (b[++i])
+			data->bottom[i] = ft_atoi(b[i]);
 	if (bottom)
 		free(bottom);
 	if (top)
 		free(top);
-	i = -1;
-	if (!ft_strncmp(str, "C", 1))
-		while (t[++i])
-			data->top[i] = ft_atoi(t[i]);
-	i = -1;
-	if (!ft_strncmp(str, "F", 1))
-		while (b[++i])
-			data->bottom[i] = ft_atoi(b[i]);
+	free_mat(b);
+	free_mat(t);
 }
 
 void	ft_check_color(char *str)
@@ -63,9 +72,7 @@ void	ft_check_color(char *str)
 	i = 0;
 	count = 0;
 	flag = 0;
-	if (str[0] && (str[0] == 'C' || str[0] == 'F')
-		&& (str[1] != ' ' && str[1] != '\t'))
-		ft_error("NO SPACE", 1, str);
+	ft_color_help(str);
 	while (str[++i])
 	{
 		check_help(str, i);
@@ -81,7 +88,7 @@ void	ft_check_color(char *str)
 			flag = 1;
 	}
 	if (flag || count != 3)
-		ft_error("Incorrect color input!", 1, str);
+		ft_error("Incorrect color input!", 1, NULL);
 }
 
 void	ft_get_color(t_data *data, char *str)
@@ -97,12 +104,12 @@ void	ft_get_color(t_data *data, char *str)
 	while (str[++i])
 	{
 		i = skip_leading_spaces(str, i);
-		if (!ft_strncmp(str, "C", 1))
+		if (!ft_strncmp(&str[i], "C", 1))
 		{
 			top = ft_extract_color(str, i);
 			break ;
 		}
-		else if (!ft_strncmp(str, "F", 1))
+		else if (!ft_strncmp(&str[i], "F", 1))
 		{
 			bottom = ft_extract_color(str, i);
 			break ;
@@ -128,7 +135,7 @@ void	ft_config(t_data *data, char *str)
 			if (str[k++] == ',')
 				count++;
 		if (count != 2)
-			ft_error("Invalid RGB format!", 1, str);
+			ft_error("Invalid RGB format!", 1, NULL);
 	}
 	if (flag && count == 2)
 		ft_get_color(data, str);

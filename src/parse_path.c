@@ -6,13 +6,13 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 13:41:06 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:22:56 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 17:40:36 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-static char	*rspaces(char *str)
+char	*rspaces(char *str)
 {
 	char	*new;
 	int		i;
@@ -38,9 +38,9 @@ char	*ft_extract_path(char *str)
 	int		i;
 
 	if (ft_strlen(str) <= 3)
-		ft_error("NO SPACE", 1, str);
+		ft_error("Invalid path!", 1, NULL);
 	if (str[2] != ' ' && str[2] != '\t')
-		ft_error("NO SPACE", 1, str);
+		ft_error("Invalid path!", 1, NULL);
 	i = 2;
 	i = skip_leading_spaces(str, i);
 	new = ft_substr(str, i, ft_strlen(str));
@@ -56,11 +56,12 @@ void	ft_get_path(t_data *data, char *str)
 	path = ft_extract_path(str);
 	printf("PATH: %sEND\n", path);
 	if (!path)
-		path_error(data, "Malloc failed", str);
+		path_error(data, "Malloc failed", NULL);
 	tex = mlx_load_png(path);
-	free(path);
+	if (path)
+		free(path);
 	if (!tex)
-		path_error(data, "Mlx_load_png failed!", str);
+		path_error(data, "Mlx_load_png failed!", NULL);
 	if (!ft_strncmp(str, "EA", 2) && !data->tex[0])
 		data->tex[0] = tex;
 	else if (!ft_strncmp(str, "WE", 2) && !data->tex[1])
@@ -70,5 +71,5 @@ void	ft_get_path(t_data *data, char *str)
 	else if (!ft_strncmp(str, "SO", 2) && !data->tex[3])
 		data->tex[3] = tex;
 	else
-		path_error(data, "Issa problem innit?", str);
+		path_error(data, "Issa problem innit?", NULL);
 }

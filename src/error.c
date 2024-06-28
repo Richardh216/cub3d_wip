@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 13:28:10 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/27 15:27:00 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/06/28 13:24:34 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ void	path_error(t_data *data, char *str, char *file)
 		if (data->mlx)
 			mlx_terminate(data->mlx);
 		if (data->map)
-			;
+			free_mat(data->map);
+		if (data->pos)
+			free(data->pos);
 	}
 	if (str)
 		ft_error(str, 1, file);
