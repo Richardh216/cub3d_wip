@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 11:06:31 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 13:35:44 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:13:12 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,24 @@ void	ft_color_help(char *str)
 	if (str[0] && (str[0] == 'C' || str[0] == 'F')
 		&& (str[1] != ' ' && str[1] != '\t'))
 		ft_error("Incorrect color input!", 1, NULL);
+}
+
+void	ft_get_map_max(t_data *data)
+{
+	int	i;
+	int	j;
+	int	max;
+
+	i = -1;
+	while (data->map[++i])
+	{
+		j = -1;
+		while (data->map[i][++j])
+		{
+			if (max <= j)
+				max = j;
+		}
+	}
+	data->map_x = i;
+	data->map_y = max + 1;
 }

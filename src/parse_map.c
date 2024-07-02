@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 20:13:24 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 13:18:56 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:13:02 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void	ft_map_cpy(t_data *data)
 		i++;
 	}
 	cpy_map[i] = NULL;
-	printf("POS: %c\n", cpy_map[pos.x][pos.y]);
 	ft_flood_map(data, cpy_map, (t_pos){pos.x, pos.y}, 0);
 	free_mat(cpy_map);
+	ft_map_uniform(data);
 }
 
 void	ft_check_map(t_data *data, char *str, int ind)
@@ -73,6 +73,7 @@ void	ft_check_map(t_data *data, char *str, int ind)
 	free(str);
 	if (!data->map)
 		ft_error("Malloc error!", 1, NULL);
+	ft_get_map_max(data);
 	i = -1;
 	while (data->map[++i])
 	{
@@ -108,7 +109,7 @@ static int	get_last(char *str, int i, t_data *data)
 	{
 		if (str[i] != '1' && str[i] != '0' && str[i] != ' '
 			&& str[i] != '\n' && str[i] != 'N' && str[i] != 'W'
-			&& str[i] != 'S' && str[i] != 'E')
+			&& str[i] != 'S' && str[i] != 'E' && str[i] != 'D')
 			path_error(data, "Invalid map!", NULL);
 		i++;
 	}

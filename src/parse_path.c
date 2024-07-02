@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 13:41:06 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 17:40:36 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:13:07 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,30 @@ void	ft_get_path(t_data *data, char *str)
 		data->tex[3] = tex;
 	else
 		path_error(data, "Issa problem innit?", NULL);
+}
+
+void	ft_map_uniform(t_data *data)
+{
+	char	**new_map;
+	int		i;
+	int		len;
+
+	new_map = (char **)malloc(sizeof(char *) * (data->map_x + 1));
+	if (!new_map)
+		ft_error("Malloc error!", 1, NULL);
+	i = 0;
+	while (data->map[i])
+	{
+		len = ft_strlen(data->map[i]);
+		new_map[i] = (char *)malloc(sizeof(char) * (data->map_y + 1));
+		if (!new_map[i])
+			ft_error("Malloc error!", 1, NULL);
+		ft_strlcpy(new_map[i], data->map[i], data->map_y + 1);
+		ft_memset(new_map[i] + len, ' ', data->map_y - len);
+		new_map[i][data->map_y] = '\0';
+		i++;
+	}
+	new_map[i] = NULL;
+	free_mat(data->map);
+	data->map = new_map;
 }

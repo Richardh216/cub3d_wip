@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 13:44:07 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:12:54 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ char	*ft_extract_color(char *str, int i)
 	count = 0;
 	while (str[i] && str[i] != '\n')
 	{
-		if ((str[i] == 'C' && i != 0) || (str[i] == 'F' && i != 0))	
-				break ;
+		if ((str[i] == 'C' && i != 0) || (str[i] == 'F' && i != 0))
+			break ;
 		i = skip_leading_spaces(str, i);
-		if (str[i] && str[i] != ' ') {
+		if (str[i] && str[i] != ' ')
 			new[j++] = str[i];
-		}
 		i++;
 	}
 	new[j] = '\0';
@@ -41,6 +40,7 @@ void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
 	char	**t;
 	int		i;
 
+	(void)str;
 	b = NULL;
 	t = NULL;
 	if (bottom)

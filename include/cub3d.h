@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 13:46:18 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:07:43 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@
 #  define BUFFER_SIZE 10
 # endif
 
-# define SPEED 0.05
-# define MAP_X 20
-# define MAP_Y 20
+# define SPEED 2
+# define MAP_X 50
+# define MAP_Y 50
 # define WIDTH 1920
 # define HEIGHT 1080
 # define FOV 60
@@ -50,6 +50,17 @@ typedef struct s_vec
 	double	y;
 }	t_vec;
 
+typedef struct s_ray
+{
+	t_vec	h;
+	t_vec	v;
+	double	dir;
+	double	dist;
+	int		c_dir;
+	int		type;
+	int		x;
+}	t_ray;
+
 typedef struct s_player
 {
 	double	x;
@@ -61,12 +72,14 @@ typedef struct s_data
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-	mlx_texture_t	*tex[4];
+	mlx_texture_t	*tex[5];
 	int				top[3];
 	int				bottom[3];
 	int				c_rgb;
 	int				f_rgb;
 	char			**map;
+	int				map_x;
+	int				map_y;
 	t_pos			*pos;
 	t_player		*player;
 }	t_data;
@@ -85,6 +98,8 @@ void	ft_val_check(t_data *data);
 void	check_help(char *str, int i);
 void	ft_get_map(t_data *data, char *str, int j);
 void	ft_color_help(char *str);
+void	ft_get_map_max(t_data *data);
+void	ft_map_uniform(t_data *data);
 
 //utils
 char	*rspaces(char *str);
@@ -108,10 +123,19 @@ t_lista	*find_last_node(t_lista *list);
 int		found_newline(t_lista *list);
 
 //render
-void	render(t_data *data);
+void		render(t_data *data);
+double		rad(double degrees);
+int			check_wall(int x, int y, char **map);
+int			is_solid(char wall);
+void		draw_line(t_data *data, int x, int start, int end);
+int			reverse_bytes(uint32_t pixel);
+
+//player
 void	keyboard(void *param);
-void	render(t_data *data);
-double	rad(double degrees);
-int		is_wall(int x, int y, int map[MAP_Y][MAP_X]);
+void	mouse_rotate(t_data *data);
+void	check_door_loop(t_data *data, t_vec vec, double *time);
+void	check_door(t_data *data);
+void	move_back_forth(t_data *data, double speed);
+void	move_left_right(t_data *data, double speed);
 
 #endif

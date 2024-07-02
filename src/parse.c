@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:12:39 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/06/28 13:43:12 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:13:23 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ static void	init_data(t_data *data)
 	data->mlx = mlx_init(WIDTH, HEIGHT, "cub3d", false);
 	data->img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	data->map = NULL;
+	data->map_x = -1;
+	data->map_y = -1;
 	data->pos = malloc(sizeof(t_pos));
 	if (!data->pos)
 		ft_error("Malloc error!", 1, NULL);
@@ -124,8 +126,5 @@ void	ft_parse(t_data *data, char **argv)
 	temp = ft_strdup(tmp);
 	i = ft_heading(data, temp);
 	ft_val_check(data);
-	printf("F_RGB %d\n", data->f_rgb);
-	printf("C_RGB %d\n", data->c_rgb);
 	ft_heading_2(data, tmp, i);
-	printf("Y: %d, X: %d\n", data->pos->y, data->pos->x);
 }

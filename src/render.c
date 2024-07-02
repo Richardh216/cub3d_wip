@@ -6,123 +6,93 @@
 /*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 12:04:54 by aoprea            #+#    #+#             */
-/*   Updated: 2024/06/27 18:39:33 by aoprea           ###   ########.fr       */
+/*   Updated: 2024/07/01 18:38:50 by aoprea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-double rad(double degrees) 
+void	draw_wall(t_data *data, int start, int end, t_ray ray)
 {
-	return (degrees * (M_PI / 180.0));
+	uint32_t	*pixels;
+	t_pos		tex;
+	int			i;
+	int			color;
+
+	i = 0;
+	if (ray.c_dir < 2)
+		tex.x = (int)(ray.h.x * data->tex[ray.c_dir]->width)
+			% data->tex[ray.c_dir]->width;
+	else
+		tex.x = (int)(ray.v.y * data->tex[ray.c_dir]->width)
+			% data->tex[ray.c_dir]->width;
+	pixels = (uint32_t *)data->tex[ray.c_dir]->pixels;
+	while (start + i < end)
+	{
+		if (start + i >= 0 && start + i < HEIGHT)
+		{
+			tex.y = i * 1.0 * data->tex[ray.c_dir]->height / (end - start);
+			color = pixels[tex.y * data->tex[ray.c_dir]->width + tex.x];
+			mlx_put_pixel(data->img, ray.x, start + i,
+				(u_int32_t)reverse_bytes(color));
+		}
+		i++;
+	}
 }
 
-double	scale(double x, double min, double max, double old_max)
+double	check_ray(t_ray *ray, t_player *p, int i, char **map)
 {
-	return ((max - min) * x / old_max + min);
-}
-
-void	draw_line(mlx_image_t *image, int x, int start, int end, int color)
-{
-	if (start < 0)
-		start = 0;
-	if (end > HEIGHT)
-		end = HEIGHT;
-	while (start < end)
-		mlx_put_pixel(image, x, start++, color);
-}
-
-void	draw_wall(t_data *data, int x, int start, int end, int c_dir)
-{
-	//mlx_image_t *img = mlx_texture_to_image(data->mlx, data->tex[0]);
-	//int color = img->pixels;
-	//mlx_texture_t
-	//printf("%p\n", data->tex[0]);
-	if (start < 0)
-		start = 0;
-	if (end > HEIGHT)
-		end = HEIGHT;
-	while (start < end)
-		//mlx_put_pixel(data->img, x, start++, );
-		mlx_put_pixel(data->img, x, start++, !(c_dir % 3) * 255 << 24 | (c_dir >= 2) * 255 << 16 | (c_dir == 1) * 255 << 8 | 255);
-}
-
-int	is_wall(int x, int y, int map[MAP_Y][MAP_X])
-{
-	if (x > MAP_X - 1 ||  y > MAP_Y - 1 || x < 0 || y < 0)
-		return (0);
-	return (map[y][x]);
+	if (i > 50)
+		return (ray->dist);
+	if (sqrt(pow(p->x - ray->h.x, 2) + pow(p->y - ray->h.y, 2))
+		< sqrt(pow(p->x - ray->v.x, 2) + pow(p->y - ray->v.y, 2)))
+	{
+		ray->type = check_wall(ray->h.x, ray->h.y - (fabs(ray->dir) < 90), map);
+		ray->c_dir = fabs(ray->dir) > 90;
+		if (ray->type == '1' || ray->type == 'D')
+			return (sqrt(pow(p->x - ray->h.x, 2) + pow(p->y - ray->h.y, 2)));
+		ray->h.x += tan(rad(ray->dir)) * (1 - (fabs(ray->dir) > 90) % 2 * 2);
+		ray->h.y += 1 - 2 * (fabs(ray->dir) < 90);
+	}
+	else
+	{
+		ray->type = check_wall(ray->v.x - (ray->dir < 0), ray->v.y, map);
+		ray->c_dir = 2 + (ray->dir < 0);
+		if (ray->type == '1' || ray->type == 'D')
+			return (sqrt(pow(p->x - ray->v.x, 2) + pow(p->y - ray->v.y, 2)));
+		ray->v.x += 1 - 2 * (ray->dir < 0);
+		ray->v.y += -(tan(rad(90 - fabs(ray->dir))));
+	}
+	return (0);
 }
 
 void	render_column(int x, t_data *data, t_player p)
 {
-int map[20][20] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1},
-    {1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-    {1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-    {1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1},
-    {1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-	(void)data;
-	t_vec	h;
-	t_vec	v;
-	double	ray_dir;
-	double	dist = 100000;
-	int i = 0;
-	int	c_dir = 0;
+	t_ray	ray;
+	double	wall;
+	int		i;
 
-	ray_dir = p.dir - (FOV / 2) + ((double)FOV / WIDTH) * x;
-	ray_dir += ((ray_dir <= -180.0) - (ray_dir > 180.0)) * 360;
-	h.y = (int)p.y + (fabs(ray_dir) > 90);
-	h.x = p.x + (p.y - h.y) * tan(rad(ray_dir));
-	v.x = (int)p.x + (ray_dir > 0);
-	v.y = p.y - (p.x - v.x) * -tan(rad(90 - ray_dir));
+	ray.dist = 100000;
+	ray.x = x;
+	i = 0;
+	ray.dir = p.dir - (FOV / 2) + ((double)FOV / WIDTH) * x;
+	ray.dir += ((ray.dir <= -180.0) - (ray.dir > 180.0)) * 360;
+	ray.h.y = (int)p.y + (fabs(ray.dir) > 90);
+	ray.h.x = p.x + (p.y - ray.h.y) * tan(rad(ray.dir));
+	ray.v.x = (int)p.x + (ray.dir > 0);
+	ray.v.y = p.y - (p.x - ray.v.x) * -tan(rad(90 - ray.dir));
 	while (i++ < 50)
-	{
-		if (sqrt(pow(p.x - h.x, 2) + pow(p.y - h.y, 2)) < sqrt(pow(p.x - v.x, 2) + pow(p.y - v.y, 2)))
-		{
-			if (is_wall((int)h.x, (int)h.y - (fabs(ray_dir) < 90), map))
-			{
-				dist = sqrt(pow(p.x - h.x, 2) + pow(p.y - h.y, 2));
-				c_dir = fabs(ray_dir) > 90; 
-				break ;
-			}
-			h.x += tan(rad(ray_dir)) * (1 - (fabs(ray_dir) > 90) % 2 * 2);
-			h.y += 1 - 2 * (fabs(ray_dir) < 90);
-		}
-		else
-		{
-			if (is_wall((int)v.x - (ray_dir < 0), (int)v.y, map))
-			{
-				dist = sqrt(pow(p.x - v.x, 2) + pow(p.y - v.y, 2));
-				c_dir = 2 + (ray_dir < 0); 
-				break ;
-			}
-			v.x += 1 - 2 * (ray_dir < 0);
-			v.y += -(tan(rad(90 - fabs(ray_dir))));
-		}
-	}
-	dist *= cos(rad(ray_dir - p.dir));
-	double wall = 1 / dist * (double)(WIDTH / 2) / (double)tan(rad(FOV / 2));
-	draw_line(data->img, x, 0, (HEIGHT - wall) / 2, 0x88888888);
-	draw_wall(data, x, (HEIGHT - wall) / 2, HEIGHT / 2 + wall / 2, c_dir);
-	draw_line(data->img, x, (HEIGHT + wall) / 2 - 1, HEIGHT, 0x88888888);
+		ray.dist = check_ray(&ray, &p, i, data->map);
+	ray.dist *= cos(rad(ray.dir - p.dir));
+	wall = 1 / ray.dist * (double)(WIDTH / 2) / tan(rad(FOV / 2));
+	draw_line(data, ray.x, 0, (HEIGHT - wall) / 2);
+	draw_wall(data, (HEIGHT - wall) / 2, (HEIGHT + wall) / 2, ray);
+	draw_line(data, ray.x, (HEIGHT + wall) / 2 - 1, HEIGHT);
 }
+
+// void	render_minimap(t_data *data)
+// {
+// }
 
 void	render(t_data *data)
 {
