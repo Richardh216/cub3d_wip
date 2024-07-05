@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
+/*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 12:04:54 by aoprea            #+#    #+#             */
-/*   Updated: 2024/07/01 18:38:50 by aoprea           ###   ########.fr       */
+/*   Updated: 2024/07/05 12:13:16 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@ void	draw_wall(t_data *data, int start, int end, t_ray ray)
 	int			color;
 
 	i = 0;
-	if (ray.c_dir < 2)
-		tex.x = (int)(ray.h.x * data->tex[ray.c_dir]->width)
-			% data->tex[ray.c_dir]->width;
-	else
-		tex.x = (int)(ray.v.y * data->tex[ray.c_dir]->width)
-			% data->tex[ray.c_dir]->width;
+	tex.x = (int)(((ray.c_dir < 2) * ray.h.x + (ray.c_dir >= 2) * ray.v.y)
+			* data->tex[((ray.type != 'D') * ray.c_dir)
+			+ ((ray.type == 'D') * 4)]
+			->width) % data->tex[((ray.type != 'D') * ray.c_dir)
+		+ ((ray.type == 'D') * 4)]->width;
+	if (ray.type == 'D')
+		ray.c_dir = 4;
 	pixels = (uint32_t *)data->tex[ray.c_dir]->pixels;
 	while (start + i < end)
 	{
@@ -40,14 +41,15 @@ void	draw_wall(t_data *data, int start, int end, t_ray ray)
 	}
 }
 
-double	check_ray(t_ray *ray, t_player *p, int i, char **map)
+double	check_ray(t_ray *ray, t_player *p, int i, t_data *data)
 {
 	if (i > 50)
 		return (ray->dist);
 	if (sqrt(pow(p->x - ray->h.x, 2) + pow(p->y - ray->h.y, 2))
 		< sqrt(pow(p->x - ray->v.x, 2) + pow(p->y - ray->v.y, 2)))
 	{
-		ray->type = check_wall(ray->h.x, ray->h.y - (fabs(ray->dir) < 90), map);
+		ray->type = check_wall(ray->h.x, ray->h.y
+				- (fabs(ray->dir) < 90), data);
 		ray->c_dir = fabs(ray->dir) > 90;
 		if (ray->type == '1' || ray->type == 'D')
 			return (sqrt(pow(p->x - ray->h.x, 2) + pow(p->y - ray->h.y, 2)));
@@ -56,7 +58,7 @@ double	check_ray(t_ray *ray, t_player *p, int i, char **map)
 	}
 	else
 	{
-		ray->type = check_wall(ray->v.x - (ray->dir < 0), ray->v.y, map);
+		ray->type = check_wall(ray->v.x - (ray->dir < 0), ray->v.y, data);
 		ray->c_dir = 2 + (ray->dir < 0);
 		if (ray->type == '1' || ray->type == 'D')
 			return (sqrt(pow(p->x - ray->v.x, 2) + pow(p->y - ray->v.y, 2)));
@@ -82,7 +84,7 @@ void	render_column(int x, t_data *data, t_player p)
 	ray.v.x = (int)p.x + (ray.dir > 0);
 	ray.v.y = p.y - (p.x - ray.v.x) * -tan(rad(90 - ray.dir));
 	while (i++ < 50)
-		ray.dist = check_ray(&ray, &p, i, data->map);
+		ray.dist = check_ray(&ray, &p, i, data);
 	ray.dist *= cos(rad(ray.dir - p.dir));
 	wall = 1 / ray.dist * (double)(WIDTH / 2) / tan(rad(FOV / 2));
 	draw_line(data, ray.x, 0, (HEIGHT - wall) / 2);
@@ -90,15 +92,36 @@ void	render_column(int x, t_data *data, t_player p)
 	draw_line(data, ray.x, (HEIGHT + wall) / 2 - 1, HEIGHT);
 }
 
-// void	render_minimap(t_data *data)
-// {
-// }
+void	shoot(t_data *data, int *frame)
+{
+	static double	time = 0;
+
+	time += data->mlx->delta_time;
+	if ((*frame == 0 && mlx_is_mouse_down(data->mlx,
+				MLX_MOUSE_BUTTON_LEFT)) || (*frame != 0 && time > 0.05))
+		*frame += 1;
+	if (time > 0.05)
+		time = 0;
+	if (*frame == 15)
+		*frame = 0;
+}
 
 void	render(t_data *data)
 {
-	int	x;
+	int			x;
+	static int	frame = 0;
 
+	if (data->gun_img)
+		mlx_delete_image(data->mlx, data->gun_img);
+	shoot(data, &frame);
+	data->gun_img = mlx_texture_to_image(data->mlx, data->gun[frame]);
+	mlx_resize_image(data->gun_img, (int)((double)data->gun_img->width
+			* (double)WIDTH / 750),
+		(int)((double)data->gun_img->height * (double)WIDTH / 750));
+	mlx_image_to_window(data->mlx, data->gun_img, WIDTH / 2 - 100
+		* WIDTH / 1500, HEIGHT - 97 * WIDTH / 750);
 	x = -1;
 	while (++x < WIDTH)
 		render_column(x, data, *data->player);
+	render_minimap(data);
 }

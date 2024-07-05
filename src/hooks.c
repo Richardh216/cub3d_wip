@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hooks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 15:41:33 by aoprea            #+#    #+#             */
-/*   Updated: 2024/07/02 14:27:46 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/04 16:57:48 by aoprea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ double	calc_speed(t_data *data)
 		* (1 + mlx_is_key_down(data->mlx, MLX_KEY_LEFT_SHIFT)));
 }
 
-void	keyboard(void *param)
+void	main_loop(void *param)
 {
 	t_data	*data;
 	double	speed;

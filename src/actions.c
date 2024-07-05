@@ -6,7 +6,7 @@
 /*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:24:18 by aoprea            #+#    #+#             */
-/*   Updated: 2024/07/01 19:19:34 by aoprea           ###   ########.fr       */
+/*   Updated: 2024/07/02 15:46:02 by aoprea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,15 @@ void	check_door_loop(t_data *data, t_vec vec, double *time)
 	i = 0;
 	while (i++ < 50)
 	{
-		if (check_wall((int)vec.x, (int)vec.y, data->map) == '1')
+		if (check_wall((int)vec.x, (int)vec.y, data) == '1')
 			break ;
-		else if (check_wall((int)vec.x, (int)vec.y, data->map) == 'D')
+		else if (check_wall((int)vec.x, (int)vec.y, data) == 'D')
 		{
 			data->map[(int)vec.y][(int)vec.x] = 'O';
 			*time = 0;
 			break ;
 		}
-		else if (check_wall((int)vec.x, (int)vec.y, data->map) == 'O')
+		else if (check_wall((int)vec.x, (int)vec.y, data) == 'O')
 		{
 			data->map[(int)vec.y][(int)vec.x] = 'D';
 			*time = 0;
@@ -78,7 +78,7 @@ void	check_door(t_data *data)
 		i = 0;
 		vec.x = data->player->x;
 		vec.y = data->player->y;
-		if (check_wall((int)vec.x, (int)vec.y, data->map) == 'O')
+		if (check_wall((int)vec.x, (int)vec.y, data) == 'O')
 			return ;
 		check_door_loop(data, vec, &time);
 	}
@@ -89,19 +89,19 @@ void	move_back_forth(t_data *data, double speed)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_W))
 	{
 		if (!is_solid(check_wall((int)(data->player->x + sin(rad(data->player-> \
-					dir)) * speed * 1.1), (int)data->player->y, data->map)))
+					dir)) * speed * 1.1), (int)data->player->y, data)))
 			data->player->x += sin(rad(data->player->dir)) * speed;
 		if (!is_solid(check_wall((int)data->player->x, (int)(data->player->y
-					- cos(rad(data->player->dir)) * speed * 1.1), data->map)))
+					- cos(rad(data->player->dir)) * speed * 1.1), data)))
 			data->player->y -= cos(rad(data->player->dir)) * speed;
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_S))
 	{
 		if (!is_solid(check_wall((int)(data->player->x - sin(rad(data->player-> \
-					dir)) * speed * 1.1), (int)data->player->y, data->map)))
+					dir)) * speed * 1.1), (int)data->player->y, data)))
 			data->player->x -= sin(rad(data->player->dir)) * speed;
 		if (!is_solid(check_wall((int)data->player->x, (int)(data->player->y
-					+ cos(rad(data->player->dir)) * speed * 1.1), data->map)))
+					+ cos(rad(data->player->dir)) * speed * 1.1), data)))
 			data->player->y += cos(rad(data->player->dir)) * speed;
 	}
 }
@@ -111,19 +111,19 @@ void	move_left_right(t_data *data, double speed)
 	if (mlx_is_key_down(data->mlx, MLX_KEY_A))
 	{
 		if (!is_solid(check_wall((int)(data->player->x - cos(rad(data->player-> \
-					dir)) * speed * 1.1), (int)data->player->y, data->map)))
+					dir)) * speed * 1.1), (int)data->player->y, data)))
 			data->player->x -= cos(rad(data->player->dir)) * speed;
 		if (!is_solid(check_wall((int)data->player->x, (int)(data->player->y
-					- sin(rad(data->player->dir)) * speed * 1.1), data->map)))
+					- sin(rad(data->player->dir)) * speed * 1.1), data)))
 			data->player->y -= sin(rad(data->player->dir)) * speed;
 	}
 	if (mlx_is_key_down(data->mlx, MLX_KEY_D))
 	{
 		if (!is_solid(check_wall((int)(data->player->x + cos(rad(data-> \
-			player->dir)) * speed * 1.1), (int)data->player->y, data->map)))
+			player->dir)) * speed * 1.1), (int)data->player->y, data)))
 			data->player->x += cos(rad(data->player->dir)) * speed;
 		if (!is_solid(check_wall((int)data->player->x, (int)(data->player->y
-					+ sin(rad(data->player->dir)) * speed * 1.1), data->map)))
+					+ sin(rad(data->player->dir)) * speed * 1.1), data)))
 			data->player->y += sin(rad(data->player->dir)) * speed;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 11:26:46 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/07/02 13:07:43 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/04 17:06:10 by aoprea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ typedef struct s_data
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
+	mlx_image_t		*minimap;
+	mlx_image_t		*gun_img;
 	mlx_texture_t	*tex[5];
+	mlx_texture_t	*gun[15];
 	int				top[3];
 	int				bottom[3];
 	int				c_rgb;
@@ -90,7 +93,7 @@ char	*ft_open(int fd);
 int		ft_heading(t_data *data, char *str);
 void	ft_config(t_data *data, char *str);
 void	ft_get_color(t_data *data, char *str);
-void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str);
+void	ft_get_color_2(char *top, char *bottom, t_data *data);
 char	*ft_extract_color(char *str, int i);
 void	ft_heading_2(t_data *data, char *str, int j);
 void	ft_get_path(t_data *data, char *str);
@@ -123,15 +126,18 @@ t_lista	*find_last_node(t_lista *list);
 int		found_newline(t_lista *list);
 
 //render
-void		render(t_data *data);
-double		rad(double degrees);
-int			check_wall(int x, int y, char **map);
-int			is_solid(char wall);
-void		draw_line(t_data *data, int x, int start, int end);
-int			reverse_bytes(uint32_t pixel);
+void	render(t_data *data);
+double	rad(double degrees);
+int		check_wall(int x, int y, t_data *data);
+int		is_solid(char wall);
+void	draw_line(t_data *data, int x, int start, int end);
+int		reverse_bytes(uint32_t pixel);
+void	render_minimap(t_data *data);
+void	minimap_show_player(t_data *data);
+void	minimap_put_tile(t_data *data, int x, int y, int color);
 
 //player
-void	keyboard(void *param);
+void	main_loop(void *param);
 void	mouse_rotate(t_data *data);
 void	check_door_loop(t_data *data, t_vec vec, double *time);
 void	check_door(t_data *data);

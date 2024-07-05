@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/25 20:13:24 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/07/02 14:13:02 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/05 12:19:01 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ft_flood_map(t_data *data, char **map, t_pos pos, int flag)
 		path_error(data, "Map not closed properly!", NULL);
 	if (map[pos.x][pos.y] == '0' || map[pos.x][pos.y] == 'N'
 		|| map[pos.x][pos.y] == 'E' || map[pos.x][pos.y] == 'S'
-			|| map[pos.x][pos.y] == 'W')
+			|| map[pos.x][pos.y] == 'W' || map[pos.x][pos.y] == 'D')
 	{
 		map[pos.x][pos.y] = 'F';
 		ft_flood_map(data, map, (t_pos){pos.x - 1, pos.y}, 1);

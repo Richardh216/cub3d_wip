@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 13:41:06 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/07/02 14:13:07 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/05 12:21:33 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	ft_get_path(t_data *data, char *str)
 	mlx_texture_t	*tex;
 
 	path = ft_extract_path(str);
-	printf("PATH: %sEND\n", path);
 	if (!path)
 		path_error(data, "Malloc failed", NULL);
 	tex = mlx_load_png(path);
@@ -62,14 +61,14 @@ void	ft_get_path(t_data *data, char *str)
 		free(path);
 	if (!tex)
 		path_error(data, "Mlx_load_png failed!", NULL);
-	if (!ft_strncmp(str, "EA", 2) && !data->tex[0])
-		data->tex[0] = tex;
-	else if (!ft_strncmp(str, "WE", 2) && !data->tex[1])
-		data->tex[1] = tex;
-	else if (!ft_strncmp(str, "NO", 2) && !data->tex[2])
+	if (!ft_strncmp(str, "EA", 2) && !data->tex[2])
 		data->tex[2] = tex;
-	else if (!ft_strncmp(str, "SO", 2) && !data->tex[3])
+	else if (!ft_strncmp(str, "WE", 2) && !data->tex[3])
 		data->tex[3] = tex;
+	else if (!ft_strncmp(str, "NO", 2) && !data->tex[0])
+		data->tex[0] = tex;
+	else if (!ft_strncmp(str, "SO", 2) && !data->tex[1])
+		data->tex[1] = tex;
 	else
 		path_error(data, "Issa problem innit?", NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: rhorvath <rhorvath@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 13:33:47 by rhorvath          #+#    #+#             */
-/*   Updated: 2024/07/02 14:12:54 by rhorvath         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:51:32 by rhorvath         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,12 @@ char	*ft_extract_color(char *str, int i)
 	return (new);
 }
 
-void	ft_get_color_2(char *top, char *bottom, t_data *data, char *str)
+void	ft_get_color_2(char *top, char *bottom, t_data *data)
 {
 	char	**b;
 	char	**t;
 	int		i;
 
-	(void)str;
 	b = NULL;
 	t = NULL;
 	if (bottom)
@@ -115,7 +114,7 @@ void	ft_get_color(t_data *data, char *str)
 			break ;
 		}
 	}
-	ft_get_color_2(top, bottom, data, str);
+	ft_get_color_2(top, bottom, data);
 }
 
 void	ft_config(t_data *data, char *str)

@@ -6,7 +6,7 @@
 /*   By: aoprea <aoprea@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:27:36 by aoprea            #+#    #+#             */
-/*   Updated: 2024/07/01 18:31:24 by aoprea           ###   ########.fr       */
+/*   Updated: 2024/07/02 19:27:12 by aoprea           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	draw_line(t_data *data, int x, int start, int end)
 		mlx_put_pixel(data->img, x, start++, color);
 }
 
-int	check_wall(int x, int y, char **map)
+int	check_wall(int x, int y, t_data *data)
 {
-	if (x >= MAP_X || y >= MAP_Y || x < 0 || y < 0)
+	if (x >= data->map_x || y >= data->map_y || x < 0 || y < 0)
 		return (0);
-	return (map[y][x]);
+	return (data->map[y][x]);
 }
